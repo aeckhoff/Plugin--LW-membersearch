@@ -1,0 +1,58 @@
+body {
+    background:url("../img/bg-header.jpg") no-repeat scroll 50% 42px #F0EFED;
+}
+#header-backend {
+	position:relative;
+	float:left;
+	height:auto;
+}
+#logo {
+	position:absolute;
+	top:0;
+	left:60px;
+}
+#backend-title {
+	position:absolute;
+	top:20px;
+	left:160px;
+}
+#backend-title h1 {
+    color: #00589C;
+    font-size: 24px;
+    line-height: 32px;
+}
+#backend-title h1 {
+    color: #fff;
+    font-size: 30px;
+    font-weight: normal;
+    line-height: 35px;
+    margin: 0 0 26px;
+}
+#topnavi {
+	margin-top:10px;
+}
+.backend {
+    width: 600px !important;
+}
+.control-bar {
+}
+#metanavi_top input[type="submit"] {
+	vertical-align:top;
+}
+select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {
+    border-radius:0;
+	box-shadow:none;
+	transition:none;
+}
+textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[type="datetime"]:focus, input[type="datetime-local"]:focus, input[type="date"]:focus, input[type="month"]:focus, input[type="time"]:focus, input[type="week"]:focus, input[type="number"]:focus, input[type="email"]:focus, input[type="url"]:focus, input[type="search"]:focus, input[type="tel"]:focus, input[type="color"]:focus, .uneditable-input:focus {
+    border:none;
+    box-shadow:none;
+    outline:0 none;
+}
+tbody tr {
+    border-bottom:none;
+}
+.kuerzel {width:80px;}
+.option {width:30px;}
+.left {float:left;}
+.right {float:right;}

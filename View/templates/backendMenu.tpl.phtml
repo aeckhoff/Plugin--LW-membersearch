@@ -1,12 +1,29 @@
-<h1>Backend Menu</h1>
-<ul>
-    <li>
-        <a href="<?php echo $this->maUrl; ?>">Mitarbeiter verwalten</a>
-    </li>
-    <li>
-        <a href="<?php echo $this->gbUrl; ?>">Geschäfts-/Fachbereiche verwalten</a>
-    </li>
-    <li>
-        <a href="<?php echo $this->ldapUrl; ?>">LDAP Daten importieren</a>
-    </li>
-</ul>
+
+<script type="text/javascript">
+	$(function () { 
+		$('.btn-icon').popover({animation:false, placement:'left', trigger:'hover'});
+	}); 
+</script>
+
+<hr />
+<div class="clearfix">
+	<div class="left">
+		<h1>Backend Menu</h1>
+    </div>
+    <div class="control-bar">
+        <div class="navbar">
+            <div class="navbar-inner">
+                <!--<a class="brand" href="#"><h1>Backend Menu</h1></a>-->
+                <ul class="nav">
+                    <li class="divider-vertical"></li>
+                    <li><a class="btn-icon" rel="popover" title="Mitarbeiter Verwaltung" data-content="Content" href="<?php echo $this->maUrl; ?>"><img src="[CONFIG:url_client]Assets/img/group.png">Mitarbeiter</a></li>
+                    <li class="divider-vertical"></li>
+                    <li><a class="btn-icon" rel="popover" title="Geschäfts-/Fachbereiche Verwaltung" data-content="Content" href="<?php echo $this->gbUrl; ?>"><img src="[CONFIG:url_client]Assets/img/details.png">Bereiche</a></li>
+                    <li class="divider-vertical"></li>
+                    <li><a class="btn-icon" rel="popover" title="LDAP Daten importieren" data-content="Content" href="<?php echo $this->ldapUrl; ?>"><img src="[CONFIG:url_client]Assets/img/import-data.png">LDAP</a></li>
+                    <li class="divider-vertical"></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
