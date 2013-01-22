@@ -20,7 +20,7 @@ class DomainEventDispatch
         $event->addEventHistory('Event passed to Domain Event Handler ['.__CLASS__.'->'.__FUNCTION__.': '.__LINE__.']');           
         $response = $DomainEventHandlerClass::getInstance()->execute($event);
         $event->addEventHistory('Event returned from Domain Event Handler ['.__CLASS__.'->'.__FUNCTION__.': '.__LINE__.']');           
-        echo "<pre>";print_r($event->getEventHistory());echo"</pre>";
+        //echo "<pre>";print_r($event->getEventHistory());echo"</pre>";
         return $response;
     }
 }

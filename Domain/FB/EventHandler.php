@@ -68,6 +68,7 @@ class EventHandler
             $entity = $this->dic->getFbRepository()->getObjectById($this->event->getParameterByKey('id'));
         }
         $formView = new \lwMembersearch\Domain\FB\View\Form('edit', $entity);
+        $formView->setEvent($this->event);
         $formView->setErrors($this->event->getParameterByKey('error'));
         return $this->returnRenderedView($formView);        
     }    
