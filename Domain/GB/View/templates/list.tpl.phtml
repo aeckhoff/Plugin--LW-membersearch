@@ -1,33 +1,50 @@
-<h1>Geschäftsbereiche</h1>
-<div>
-    <a href="<?php echo $this->backUrl; ?>">zurück zum Menu</a> | <a href="<?php echo $this->newUrl; ?>">neuen GB anlegen</a>
+<hr />
+<div class="clearfix">
+	<div class="left">
+		<h1>Geschäftsbereiche</h1>
+    </div>
+    <div class="control-bar right">
+	    <a class="btn" href="<?php echo $this->backUrl; ?>"><img src="[CONFIG:url_client]Assets/img/back.png"></a>
+	    <a class="btn" href="<?php echo $this->newUrl; ?>"><img src="[CONFIG:url_client]Assets/img/add.png"></a>
+    </div>
 </div>
-<br/>
-<table>
-    
-    <?php 
+<hr />
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Kürzel</th>
+            <th>Name</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+	<?php 
         if ($this->gbs->count()>0):
             foreach($this->gbs as $gb): ?>
     <tr>
-        <td>
+        <td class="kuerzel">
             <?php echo $gb->getValueByKey('opt1text'); ?>
         </td>
         <td>
             <?php echo $gb->getValueByKey('name'); ?>
         </td>
-        <td>
-            <a href="<?php echo \lw_page::getInstance()->getUrl(array('cmd'=>'editGbForm', "id"=>$gb->getValueByKey('id'))); ?>">bearbeiten</a>
+        <td class="option">
+            <a href="<?php echo \lw_page::getInstance()->getUrl(array('cmd'=>'editGbForm', "id"=>$gb->getValueByKey('id'))); ?>">
+                <img src="[CONFIG:url_client]assets/img/edit-btn.png">
+            </a>
         </td>
-        <td>
+        <td class="option">
             <?php if($this->deletableSpecification->isSatisfiedBy($gb)): ?>
-            <a onclick="return confirm('wirklich löschen?');" href="<?php echo \lw_page::getInstance()->getUrl(array('cmd'=>'deleteGb', "id"=>$gb->getValueByKey('id'))); ?>">löschen</a>
+            <a onclick="return confirm('wirklich löschen?');" href="<?php echo \lw_page::getInstance()->getUrl(array('cmd'=>'deleteGb', "id"=>$gb->getValueByKey('id'))); ?>"><img src="[CONFIG:url_client]assets/img/garbage.png"></a>
             <?php endif; ?>
         </td>
     </tr>
-        <?php 
-            endforeach; 
-        else: ?>
-    <div>Keine GB vorhanden!</div>
-    <? endif; ?>
-    
+	<?php 
+        endforeach; 
+    else: ?>
+		<tr class="warning">
+        	<td colspan="4"><p class="text-warning">Keine GB vorhanden!</p></td>
+        </tr>
+    <?php endif; ?>
 </table>
+    

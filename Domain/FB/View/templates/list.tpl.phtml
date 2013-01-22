@@ -1,33 +1,47 @@
-<h1>Fachbereiche</h1>
-<div>
-    <a href="<?php echo $this->newUrl; ?>">neuen FB anlegen</a>
+<hr />
+<div class="clearfix">
+	<div class="left">
+		<h1>Fachbereiche</h1>
+    </div>
+    <div class="control-bar right">
+	    <a class="btn" href="<?php echo $this->backUrl; ?>"><img src="[CONFIG:url_client]Assets/img/back.png"></a>
+	    <a class="btn" href="<?php echo $this->newUrl; ?>"><img src="[CONFIG:url_client]Assets/img/add.png"></a>
+    </div>
 </div>
-<br/>
-<table>
-    
-    <?php 
+<hr />
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Kürzel</th>
+            <th>Name</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+	<?php 
         if ($this->fbs->count()>0):
-            foreach($this->fbs as $fb): ?>
+            foreach($this->fbs as $fb): ?>   
     <tr>
-        <td>
+        <td class="kuerzel">
             <?php echo $fb->getValueByKey('opt1text'); ?>
         </td>
         <td>
             <?php echo $fb->getValueByKey('name'); ?>
         </td>
-        <td>
-            <a href="<?php echo \lw_page::getInstance()->getUrl(array('cmd'=>'editFbForm', "id"=>$fb->getValueByKey('id'), "category_id" => $this->categoryId)); ?>">bearbeiten</a>
+        <td class="option">
+            <a href="<?php echo \lw_page::getInstance()->getUrl(array('cmd'=>'editFbForm', "id"=>$fb->getValueByKey('id'), "category_id" => $this->categoryId)); ?>"><img src="[CONFIG:url_client]assets/img/edit-btn.png"></a>
         </td>
-        <td>
+        <td class="option">
             <?php if($this->deletableSpecification->isSatisfiedBy($fb)): ?>
-            <a onclick="return confirm('wirklich löschen?');" href="<?php echo \lw_page::getInstance()->getUrl(array('cmd'=>'deleteFb', "id"=>$fb->getValueByKey('id'), "category_id" => $this->categoryId)); ?>">löschen</a>
+            <a onclick="return confirm('wirklich löschen?');" href="<?php echo \lw_page::getInstance()->getUrl(array('cmd'=>'deleteFb', "id"=>$fb->getValueByKey('id'), "category_id" => $this->categoryId)); ?>"><img src="[CONFIG:url_client]assets/img/garbage.png"></a>
             <?php endif; ?>
         </td>
     </tr>
-        <?php 
-            endforeach; 
-        else: ?>
-    <div>Keine FB vorhanden!</div>
-    <? endif; ?>
-    
+	<?php 
+        endforeach; 
+    else: ?>
+		<tr class="warning">
+        	<td colspan="4"><p class="text-warning">Keine FB vorhanden!</p></td>
+        </tr>
+    <?php endif; ?>
 </table>

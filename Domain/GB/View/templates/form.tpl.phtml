@@ -1,13 +1,11 @@
 <?php
-
     function showError($error)
     {
         if($error): ?>
         <div class="alert alert-block alert-error">
             <?php foreach($error as $errorcode => $array): ?>
             <h3 class="alert-heading">Fehler:</h3>
-            <p><?php 
-            
+            <p><?php             
             switch ($errorcode) {
                 case LW_MAXLENGTH_ERROR:
                     ?>Die Maximallänge ist überschritten, bitte kürzen sie ihren Eintrag.<?php
@@ -17,38 +15,42 @@
                     ?>Der Fehler konnte nicht näher eingegrenzt werden!<?php
                     break;
             }
-
             ?></p>
             <?php endforeach; ?>
         </div>
         <?php endif;
     }
-
 ?>
-<h1>Geschäftsbereich</h1>
-
-<div>
-    <a href="<?php echo $this->backUrl; ?>">zurück</a>
+<hr />
+<div class="clearfix">
+	<div class="left">
+		<h1>Geschäftsbereich</h1>
+    </div>
+    <div class="control-bar right">
+	    <a class="btn" href="<?php echo $this->backUrl; ?>"><img src="[CONFIG:url_client]Assets/img/back.png"></a>
+    	<a class="btn" onclick="$('form').submit();"><img src="[CONFIG:url_client]Assets/img/save.png"></a>
+    </div>
 </div>
-
-<?php if(is_array($this->errors)): ?>
-    <div class="alert page-error"><b>Es gibt Fehler!</b></div>
-<?php endif; ?>
-
-<form action="<?php echo $this->actionUrl; ?>" method="post">
-    
-    <div>
-        Kürzel: <input type="text" name="opt1text" value="<?php echo $this->entity['opt1text']; ?>" />
-        <?php showError($this->errors['opt1text']); ?>
-    </div>
-    <div>
-        Name: <input type="text" name="name" value="<?php echo $this->entity['name']; ?>" />
-        <?php showError($this->errors['name']); ?>
-    </div>
-    
-    <input type="submit" value="speichern" />
-</form>
-    
-<br/><br/>
-
+<hr />
+<div class="clearfix">
+	<?php if(is_array($this->errors)): ?>
+        <div class="alert page-error"><b>Es gibt Fehler!</b></div>
+    <?php endif; ?>
+    <form id="form" action="<?php echo $this->actionUrl; ?>" method="post" >
+        
+        <div class="control-group width-100 left">
+            <label class="control-label">Kürzel:</label>
+            <input type="text" name="opt1text" value="<?php echo $this->entity['opt1text']; ?>" />
+            <?php showError($this->errors['opt1text']); ?>
+        </div>  
+        <div class="control-group width-350 left">
+            <label class="control-label">Name:</label>
+            <input type="text" name="name" value="<?php echo $this->entity['name']; ?>" />
+            <?php showError($this->errors['name']); ?>
+        </div>
+        <div class="control-group inline-submit">
+            <a class="btn btn-icon" onclick="$('form').submit();"><img src="[CONFIG:url_client]Assets/img/save.png">Submit</a>
+        </div>    
+    </form>   
+</div>
 <?php if ($this->showFbList): echo $this->FbList; endif; ?>
