@@ -4,8 +4,8 @@
 		<h1>Geschäftsbereiche</h1>
     </div>
     <div class="control-bar right">
-	    <a class="btn" href="<?php echo $this->backUrl; ?>"><img src="[CONFIG:url_client]Assets/img/back.png"></a>
-	    <a class="btn" href="<?php echo $this->newUrl; ?>"><img src="[CONFIG:url_client]Assets/img/add.png"></a>
+	    <a class="btn" href="<?php echo $this->backUrl; ?>"><img src="[CONFIG:url_resource]projects/membersearch/Assets/img/back.png"></a>
+	    <a class="btn" href="<?php echo $this->newUrl; ?>"><img src="[CONFIG:url_resource]projects/membersearch/Assets/img/add.png"></a>
     </div>
 </div>
 <hr />
@@ -30,12 +30,12 @@
         </td>
         <td class="option">
             <a href="<?php echo \lw_page::getInstance()->getUrl(array('cmd'=>'editGbForm', "id"=>$gb->getValueByKey('id'))); ?>">
-                <img src="[CONFIG:url_client]assets/img/edit-btn.png">
+                <img src="[CONFIG:url_resource]projects/membersearch/Assets/img/edit-btn.png">
             </a>
         </td>
         <td class="option">
             <?php if($this->deletableSpecification->isSatisfiedBy($gb)): ?>
-            <a onclick="return confirm('wirklich löschen?');" href="<?php echo \lw_page::getInstance()->getUrl(array('cmd'=>'deleteGb', "id"=>$gb->getValueByKey('id'))); ?>"><img src="[CONFIG:url_client]assets/img/garbage.png"></a>
+            <a onclick="return confirm('wirklich löschen?');" href="<?php echo \lw_page::getInstance()->getUrl(array('cmd'=>'deleteGb', "id"=>$gb->getValueByKey('id'))); ?>"><img src="[CONFIG:url_resource]projects/membersearch/Assets/img/garbage.png"></a>
             <?php endif; ?>
         </td>
     </tr>
