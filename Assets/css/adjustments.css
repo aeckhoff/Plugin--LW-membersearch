@@ -11,48 +11,126 @@ body {
 	top:0;
 	left:60px;
 }
-#backend-title {
+#backend-info {
 	position:absolute;
-	top:20px;
-	left:160px;
+	top:10px;
+	right:20px;
 }
-#backend-title h1 {
-    color: #00589C;
+#backend-info h1 {
+    color: #eed3c4;
     font-size: 24px;
-    line-height: 32px;
-}
-#backend-title h1 {
-    color: #fff;
-    font-size: 30px;
     font-weight: normal;
-    line-height: 35px;
-    margin: 0 0 26px;
+    line-height: 50px;
+    margin: 0 15px 0;
+	display:inline-block;
+	vertical-align:top;
+}
+.user-bar {
+	display:inline-block;
+	height:26px;
+	padding:12px 0 12px 20px;
+	border-left:1px solid #c36238;
+}
+.user { 
+    color: #eed3c4;
+    display: block;
+    float: left;
+    font-weight: bold;
+    height: 26px;
+    line-height: 26px;
+    padding: 0 15px 0 0;
+}
+.user img {
+    vertical-align: top;
+}
+.logout {
+    background: url("../img/logout-user.png") no-repeat scroll left top #c36238;
+    display: block;
+    float: left;
+    height: 26px;
+    margin-left: 1px;
+    width: 46px;
+}
+.logout:hover {
+	background-color:#fff;
 }
 #topnavi {
 	margin-top:10px;
 }
 .backend {
-    width: 600px !important;
+    width: 920px !important;
 }
-.control-bar {
+#main hr {
+	background:none;
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: #EEEEEE -moz-use-text-color #FFFFFF;
+    border-image: none;
+    border-left: 0 none;
+    border-right: 0 none;
+    border-style: solid none;
+    border-width: 1px 0;
+    margin: 10px 0 20px;
+	width:100%;
+	height:2px;
+}
+#main h1 {
+	margin:0 0 10px;
 }
 #metanavi_top input[type="submit"] {
 	vertical-align:top;
 }
+
 select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {
     border-radius:0;
-	box-shadow:none;
-	transition:none;
+	height:21px;
 }
 textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[type="datetime"]:focus, input[type="datetime-local"]:focus, input[type="date"]:focus, input[type="month"]:focus, input[type="time"]:focus, input[type="week"]:focus, input[type="number"]:focus, input[type="email"]:focus, input[type="url"]:focus, input[type="search"]:focus, input[type="tel"]:focus, input[type="color"]:focus, .uneditable-input:focus {
-    border:none;
-    box-shadow:none;
     outline:0 none;
+}
+.btn {border-radius:0;}
+.btn-icon {display:block;}
+.btn-icon img{	
+	padding-right:8px;
+}
+input, textarea, .uneditable-input {
+    width: 100%;
+}
+.control-group {
+	margin-left:18px;
+}
+.control-group:first-child {
+	margin-left:0;
 }
 tbody tr {
     border-bottom:none;
 }
+.control-bar {width:auto; float:right;
+}
+#main h3.popover-title {
+    background-color: #F7F7F7;
+    border-bottom: 1px solid #EBEBEB;
+    border-radius: 5px 5px 0 0;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 18px;
+    margin: 0;
+    padding: 8px 14px;
+}
+#main table p {margin-bottom:0;}
+#main .navbar .nav {margin: 0;}
+#main .nav {margin-bottom: 20px; margin-left: 0;}
+#main ul.nav li {background:none; padding:0;}
+.navbar .nav > li > a {padding: 10px 20px;}
+.navbar .divider-vertical {
+    border-left: 1px solid #d4d4d4;
+}
+.width-100 {width:100px;}
+.width-350 {width:350px;}
 .kuerzel {width:80px;}
-.option {width:30px;}
+.option {width:20px; padding:8px 13px !important;}
 .left {float:left;}
 .right {float:right;}
+.inline-submit {float:left; padding-top:25px;}
