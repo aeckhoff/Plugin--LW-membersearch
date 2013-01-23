@@ -21,12 +21,6 @@ class EventHandler
         return $this->$method();
     }
 
-    protected function returnRenderedView($view)
-    {
-        $this->event->getResponse()->setOutputByKey('output', $view->render());
-        return $this->event->getResponse();
-    }
-    
     protected function getAllGbAggregate()
     {
         $aggregate = $this->dic->getGbRepository()->getAllObjectsAggregate();
@@ -34,9 +28,9 @@ class EventHandler
         return $this->event->getResponse();
     }
     
-    protected function getIsDeletableSepcification()
+    protected function getIsDeletableSpecification()
     {
-        $this->event->getResponse()->setDataByKey('isDeletableSepcification', \lwMembersearch\Domain\GB\Specification\isValid::getInstance());
+        $this->event->getResponse()->setDataByKey('isDeletableSpecification', \lwMembersearch\Domain\GB\Specification\isValid::getInstance());
         return $this->event->getResponse();
     }
     

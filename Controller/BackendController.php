@@ -56,8 +56,8 @@ class BackendController
         $event = \LWddd\DomainEvent::getInstance('GB', 'getAllGbAggregate');
         $view->setAggregate($this->dispatch->execute($event)->getDataByKey('allGbAggregate'));
 
-        $event = \LWddd\DomainEvent::getInstance('GB', 'getIsDeletableSepcification');
-        $view->setIsDeletableSpecification($this->dispatch->execute($event)->getDataByKey('isDeletableSepcification'));
+        $event = \LWddd\DomainEvent::getInstance('GB', 'getIsDeletableSpecification');
+        $view->setIsDeletableSpecification($this->dispatch->execute($event)->getDataByKey('isDeletableSpecification'));
         
         return $this->returnRenderedView($view);
     }    
@@ -103,6 +103,7 @@ class BackendController
         $formView = new \lwMembersearch\View\GbForm('edit');
         $formView->setEntity($entity);
         $formView->setErrors($error);
+        $formView->setFbListView($this->getRenderedFbList());
         return $this->returnRenderedView($formView);
     }    
     
@@ -128,12 +129,30 @@ class BackendController
         return $this->dispatch->execute($event);
     }    
     
-    protected function addFbFormAction($errors=false)
+    protected function getRenderedFbList()
     {
-        $event = \LWddd\DomainEvent::getInstance('FB', 'getAddFormView')
-                ->setDataByKey('postArray', $this->request->getPostArray())
-                ->addEventHistory('Event created ['.__CLASS__.'->'.__FUNCTION__.': '.__LINE__.']');
-        return $this->dispatch->execute($event);
+        $view = new \lwMembersearch\View\FbList();
+
+        $event = \LWddd\DomainEvent::getInstance('FB', 'getAllFbAggregate')
+                ->setParameterByKey("categoryId", $this->request->getInt("id"));
+        $view->setAggregate($this->dispatch->execute($event)->getDataByKey('allFbAggregate'));
+
+        $event = \LWddd\DomainEvent::getInstance('FB', 'getIsDeletableSpecification');
+        $view->setIsDeletableSpecification($this->dispatch->execute($event)->getDataByKey('isDeletableSpecification'));
+        
+        return $view->render();
+    }     
+    
+    protected function addFbFormAction($error=false)
+    {
+        $formView = new \lwMembersearch\View\FbForm('add');
+
+        $event = \LWddd\DomainEvent::getInstance('FB', 'getFbEntityFromArray')
+                ->setDataByKey('postArray', $this->request->getPostArray());
+        $formView->setEntity($this->dispatch->execute($event)->getDataByKey('FbEntity'));
+        $formView->setCategoryId($this->request->getInt("category_id"));
+        $formView->setErrors($error);
+        return $this->returnRenderedView($formView);
     }
     
     protected function addFbAction()
@@ -141,27 +160,53 @@ class BackendController
         $event = \LWddd\DomainEvent::getInstance('FB', 'add')
                 ->setDataByKey('postArray', $this->request->getPostArray())
                 ->setParameterByKey('categoryId', $this->request->getInt("category_id"));
-        return $this->dispatch->execute($event);
+        $response = $this->dispatch->execute($event);
+        if ($response->getParameterByKey("error")) {
+            return $this->addFbFormAction($response->getDataByKey("error"));
+        }
+        $response = \LWddd\Response::getInstance();
+        $response->setParameterByKey('cmd', 'editGbForm');
+        $response->setParameterByKey('response', 1);
+        $response->setParameterByKey('id', $this->request->getInt("category_id"));
+        return $response;
     }
     
-    protected function editFbFormAction($errors=false)
+    protected function editFbFormAction($error=false)
     {
-        $event = \LWddd\DomainEvent::getInstance('FB', 'getEditFormView')
-                ->setDataByKey('postArray', $this->request->getPostArray())
-                ->setParameterByKey('id', $this->request->getInt("id"))
-                ->setParameterByKey('categoryId', $this->request->getInt("category_id"));
-        return $this->dispatch->execute($event);
-    }    
+        if ($error) {
+            $event = \LWddd\DomainEvent::getInstance('FB', 'getFbEntityFromArray')
+                    ->setDataByKey('postArray', $this->request->getPostArray());
+            $entity = $this->dispatch->execute($event)->getDataByKey('FbEntity');
+            $entity->setId($this->request->getInt("id"));
+        }
+        else {
+            $event = \LWddd\DomainEvent::getInstance('FB', 'getFbEntityById')
+                    ->setParameterByKey("id", $this->request->getInt("id"));
+            $entity = $this->dispatch->execute($event)->getDataByKey('FbEntity');
+        }
+        $formView = new \lwMembersearch\View\FbForm('edit');
+        $formView->setEntity($entity);
+        $formView->setErrors($error);
+        $formView->setCategoryId($this->request->getInt("category_id"));
+        return $this->returnRenderedView($formView);
+    }      
     
     protected function saveFbAction()
     {
         $event = \LWddd\DomainEvent::getInstance('FB', 'save')
-                ->setDataByKey('postArray', $this->request->getPostArray())
-                ->setParameterByKey('id', $this->request->getInt("id"))
-                ->setParameterByKey('categoryId', $this->request->getInt("category_id"));
-        return $this->dispatch->execute($event);
-    }
-    
+                ->setParameterByKey("id", $this->request->getInt("id"))
+                ->setDataByKey('postArray', $this->request->getPostArray());
+        $response = $this->dispatch->execute($event);
+        if ($response->getParameterByKey("error")) {
+            return $this->editFbFormAction($response->getDataByKey("error"));
+        }
+        $response = \LWddd\Response::getInstance();
+        $response->setParameterByKey('cmd', 'editGbForm');
+        $response->setParameterByKey('response', 1);
+        $response->setParameterByKey('id', $this->request->getInt("category_id"));
+        return $response;  
+    }    
+
     protected function deleteFbAction()
     {
         $event = \LWddd\DomainEvent::getInstance('FB', 'delete')

@@ -20,74 +20,73 @@ class EventHandler
         $method = $this->event->getEventName();
         return $this->$method();
     }    
-    
-    protected function returnRenderedView($view)
+
+    protected function getAllFbAggregate()
     {
-        $this->event->getResponse()->setOutputByKey('output', $view->render());
+        $aggregate = $this->dic->getFbRepository()->getAllObjectsByCategoryAggregate($this->event->getParameterByKey("categoryId"));
+        $this->event->getResponse()->setDataByKey('allFbAggregate', $aggregate);
         return $this->event->getResponse();
     }    
     
-    public function getAddFormView()
+    protected function getIsDeletableSpecification()
     {
-        $dataValueObject = new \LWddd\ValueObject($this->event->getDataByKey('postArray'));
-        $this->event->addEventHistory('built ValueObject from postArray ['.__CLASS__.'->'.__FUNCTION__.': '.__LINE__.']');
-        $entity = \lwMembersearch\Domain\FB\Model\Factory::getInstance()->buildNewObjectFromValueObject($dataValueObject);
-        $this->event->addEventHistory('built FB entity from ValueObject ['.__CLASS__.'->'.__FUNCTION__.': '.__LINE__.']');
-        $formView = new \lwMembersearch\Domain\FB\View\Form('add', $entity);
-        $this->event->addEventHistory('passed to form View ['.__CLASS__.'->'.__FUNCTION__.': '.__LINE__.']');
-        $formView->setEvent($this->event);
-        $formView->setErrors($this->event->getParameterByKey('error'));
-        $this->event->addEventHistory('built FB Add Form ['.__CLASS__.'->'.__FUNCTION__.': '.__LINE__.']');
-        return $this->returnRenderedView($formView);
+        $this->event->getResponse()->setDataByKey('isDeletableSpecification', \lwMembersearch\Domain\FB\Specification\isValid::getInstance());
+        return $this->event->getResponse();
     }
     
+    protected function getFbEntityFromArray()
+    {
+        $dataValueObject = new \LWddd\ValueObject($this->event->getDataByKey('postArray'));
+        $entity = \lwMembersearch\Domain\FB\Model\Factory::getInstance()->buildNewObjectFromValueObject($dataValueObject);
+        $this->event->getResponse()->setDataByKey('FbEntity', $entity);
+        return $this->event->getResponse();        
+    }
+
     public function add()
     {
         try {
             $dataValueObject = new \LWddd\ValueObject(array_merge(array("category_id"=>$this->event->getParameterByKey('categoryId')),$this->event->getDataByKey('postArray')));
             $result = $this->dic->getFbRepository()->saveObject(false, $dataValueObject);
-            $this->event->getResponse()->setParameterByKey('cmd', 'editGbForm');
-            $this->event->getResponse()->setParameterByKey('response', 1);
-            $this->event->getResponse()->setParameterByKey('id', $this->event->getParameterByKey('categoryId'));
-            return $this->event->getResponse();
+            $this->event->getResponse()->setParameterByKey('saved', true);
         }
         catch (\LWddd\validationErrorsException $e) {
-            $this->event->setParameterByKey('error', $e->getErrors());
-            return $this->getAddFormView($PostArray, $e->getErrors());
-        }        
+            $this->event->getResponse()->setDataByKey('error', $e->getErrors());
+            $this->event->getResponse()->setParameterByKey('error', true);
+        }
+        return  $this->event->getResponse(); 
     }
-
-    public function getEditFormView()
+    
+    protected function getFbEntityById()
     {
-        if ($this->event->getParameterByKey('error')) {
-            $dataValueObject = new \LWddd\ValueObject($this->event->getDataByKey('postArray'));
-            $entity = \lwMembersearch\Domain\FB\Model\Factory::getInstance()->buildNewObjectFromValueObject($dataValueObject);
-            $entity->setId($this->event->getParameterByKey('id'));
-        }
-        else {
-            $entity = $this->dic->getFbRepository()->getObjectById($this->event->getParameterByKey('id'));
-        }
-        $formView = new \lwMembersearch\Domain\FB\View\Form('edit', $entity);
-        $formView->setEvent($this->event);
-        $formView->setErrors($this->event->getParameterByKey('error'));
-        return $this->returnRenderedView($formView);        
+        $entity = $this->dic->getFbRepository()->getObjectById($this->event->getParameterByKey('id'));
+        $this->event->getResponse()->setDataByKey('FbEntity', $entity);
+        return $this->event->getResponse();        
     }    
-
+    
     public function save()
     {
         try {
             $dataValueObject = new \LWddd\ValueObject($this->event->getDataByKey('postArray'));
             $result = $this->dic->getFbRepository()->saveObject($this->event->getParameterByKey('id'), $dataValueObject);
-            $this->event->getResponse()->setParameterByKey('cmd', 'editGbForm');
-            $this->event->getResponse()->setParameterByKey('response', 1);
-            $this->event->getResponse()->setParameterByKey('id', $this->event->getParameterByKey('categoryId'));
-            return $this->event->getResponse();
+            $this->event->getResponse()->setParameterByKey('saved', true);
         }
         catch (\LWddd\validationErrorsException $e) {
-            $this->event->setParameterByKey('error', $e->getErrors());
-            return $this->getEditFormView();
-        }
-    }
+            $this->event->getResponse()->setDataByKey('error', $e->getErrors());
+            $this->event->getResponse()->setParameterByKey('error', true);
+        }        
+        return $this->event->getResponse();
+    }    
+    
+    
+    
+    
+    
+    
+    
+
+  
+
+
     
     public function delete()
     {
