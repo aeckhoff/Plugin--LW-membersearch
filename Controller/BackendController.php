@@ -42,11 +42,84 @@ class BackendController
         }
     }
     
+    protected function returnRenderedView($view)
+    {
+        $response = \LWddd\Response::getInstance();
+        $response->setOutputByKey('output', $view->render());
+        return $response;
+    }
+    
     protected function showGbListAction()
     {
-        $event = \LWddd\DomainEvent::getInstance('GB', 'getListView');
-        return $this->dispatch->execute($event);
+        $view = new \lwMembersearch\View\GbList();
+
+        $event = \LWddd\DomainEvent::getInstance('GB', 'getAllGbAggregate');
+        $view->setAggregate($this->dispatch->execute($event)->getDataByKey('allGbAggregate'));
+
+        $event = \LWddd\DomainEvent::getInstance('GB', 'getIsDeletableSepcification');
+        $view->setIsDeletableSpecification($this->dispatch->execute($event)->getDataByKey('isDeletableSepcification'));
+        
+        return $this->returnRenderedView($view);
     }    
+    
+    protected function addGbFormAction($error = false)
+    {
+        $formView = new \lwMembersearch\View\GbForm('add');
+
+        $event = \LWddd\DomainEvent::getInstance('GB', 'getGbEntityFromArray')
+                ->setDataByKey('postArray', $this->request->getPostArray());
+        $formView->setEntity($this->dispatch->execute($event)->getDataByKey('GbEntity'));
+        $formView->setErrors($error);
+        return $this->returnRenderedView($formView);
+    }    
+    
+    protected function addGbAction()
+    {
+        $event = \LWddd\DomainEvent::getInstance('GB', 'add')
+                ->setDataByKey('postArray', $this->request->getPostArray());
+        $response = $this->dispatch->execute($event);
+        if ($response->getParameterByKey("error")) {
+            return $this->addGbFormAction($response->getDataByKey("error"));
+        }
+        $response = \LWddd\Response::getInstance();
+        $response->setParameterByKey('cmd', 'showGbList');
+        $response->setParameterByKey('response', 1);
+        return $response;
+    }     
+    
+    protected function editGbFormAction($error=false)
+    {
+        if ($error) {
+            $event = \LWddd\DomainEvent::getInstance('GB', 'getGbEntityFromArray')
+                    ->setDataByKey('postArray', $this->request->getPostArray());
+            $entity = $this->dispatch->execute($event)->getDataByKey('GbEntity');
+            $entity->setId($this->request->getInt("id"));
+        }
+        else {
+            $event = \LWddd\DomainEvent::getInstance('GB', 'getGbEntityById')
+                    ->setParameterByKey("id", $this->request->getInt("id"));
+            $entity = $this->dispatch->execute($event)->getDataByKey('GbEntity');
+        }
+        $formView = new \lwMembersearch\View\GbForm('edit');
+        $formView->setEntity($entity);
+        $formView->setErrors($error);
+        return $this->returnRenderedView($formView);
+    }    
+    
+    protected function saveGbAction()
+    {
+        $event = \LWddd\DomainEvent::getInstance('GB', 'save')
+                ->setParameterByKey("id", $this->request->getInt("id"))
+                ->setDataByKey('postArray', $this->request->getPostArray());
+        $response = $this->dispatch->execute($event);
+        if ($response->getParameterByKey("error")) {
+            return $this->editGbFormAction($response->getDataByKey("error"));
+        }
+        $response = \LWddd\Response::getInstance();
+        $response->setParameterByKey('cmd', 'showGbList');
+        $response->setParameterByKey('response', 1);
+        return $response;        
+    } 
     
     protected function deleteGbAction()
     {
@@ -54,36 +127,6 @@ class BackendController
                 ->setParameterByKey("id", $this->request->getInt("id"));
         return $this->dispatch->execute($event);
     }    
-    
-    protected function editGbFormAction()
-    {
-        $event = \LWddd\DomainEvent::getInstance('GB', 'getEditFormView')
-                ->setParameterByKey("id", $this->request->getInt("id"))
-                ->setDataByKey("postArray", $this->request->getPostArray());
-        return $this->dispatch->execute($event);
-    }     
-    
-    protected function saveGbAction()
-    {
-        $event = \LWddd\DomainEvent::getInstance('GB', 'save')
-                ->setParameterByKey("id", $this->request->getInt("id"))
-                ->setDataByKey('postArray', $this->request->getPostArray());
-        return $this->dispatch->execute($event);
-    }    
-
-    protected function addGbFormAction()
-    {
-        $event = \LWddd\DomainEvent::getInstance('GB', 'getAddFormView')
-                ->setDataByKey('postArray', $this->request->getPostArray());
-        return $this->dispatch->execute($event);
-    }
-    
-    protected function addGbAction()
-    {
-        $event = \LWddd\DomainEvent::getInstance('GB', 'add')
-                ->setDataByKey('postArray', $this->request->getPostArray());
-        return $this->dispatch->execute($event);
-    }     
     
     protected function addFbFormAction($errors=false)
     {

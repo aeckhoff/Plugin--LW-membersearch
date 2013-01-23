@@ -27,9 +27,60 @@ class EventHandler
         return $this->event->getResponse();
     }
     
-    protected function getListView()
+    protected function getAllGbAggregate()
     {
-        return $this->returnRenderedView(new \lwMembersearch\Domain\GB\View\GbList());
+        $aggregate = $this->dic->getGbRepository()->getAllObjectsAggregate();
+        $this->event->getResponse()->setDataByKey('allGbAggregate', $aggregate);
+        return $this->event->getResponse();
+    }
+    
+    protected function getIsDeletableSepcification()
+    {
+        $this->event->getResponse()->setDataByKey('isDeletableSepcification', \lwMembersearch\Domain\GB\Specification\isValid::getInstance());
+        return $this->event->getResponse();
+    }
+    
+    protected function getGbEntityFromArray()
+    {
+        $dataValueObject = new \LWddd\ValueObject($this->event->getDataByKey('postArray'));
+        $entity = \lwMembersearch\Domain\GB\Model\Factory::getInstance()->buildNewObjectFromValueObject($dataValueObject);
+        $this->event->getResponse()->setDataByKey('GbEntity', $entity);
+        return $this->event->getResponse();
+    }
+
+    public function add()
+    {
+        try {
+            $dataValueObject = new \LWddd\ValueObject($this->event->getDataByKey('postArray'));
+            $result = $this->dic->getGbRepository()->saveObject(false, $dataValueObject);
+            $this->event->getResponse()->setParameterByKey('saved', true);
+        }
+        catch (\LWddd\validationErrorsException $e) {
+            $this->event->getResponse()->setDataByKey('error', $e->getErrors());
+            $this->event->getResponse()->setParameterByKey('error', true);
+        }
+        return  $this->event->getResponse();
+    }     
+    
+    protected function getGbEntityById()
+    {
+        $entity = $this->dic->getGbRepository()->getObjectById($this->event->getParameterByKey('id'));
+        $this->event->getResponse()->setDataByKey('GbEntity', $entity);
+        return $this->event->getResponse();        
+    }
+    
+    public function save()
+    {
+        try {
+            $dataValueObject = new \LWddd\ValueObject($this->event->getDataByKey('postArray'));
+            $result = $this->dic->getGbRepository()->saveObject($this->event->getParameterByKey('id'), $dataValueObject);
+            $this->event->getResponse()->setParameterByKey('saved', true);
+        }
+        catch (\LWddd\validationErrorsException $e) {
+            $this->event->getResponse()->setDataByKey('error', $e->getErrors());
+            $this->event->getResponse()->setParameterByKey('error', true);
+        }        
+        return $this->event->getResponse();
     }
     
     protected function deleteById()
@@ -43,59 +94,5 @@ class EventHandler
         catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }        
-    }    
-    
-    public function getEditFormView()
-    {
-        if ($this->event->getParameterByKey('error')) {
-            $dataValueObject = new \LWddd\ValueObject($this->event->getDataByKey('postArray'));
-            $entity = \lwMembersearch\Domain\GB\Model\Factory::getInstance()->buildNewObjectFromValueObject($dataValueObject);
-            $entity->setId($this->event->getParameterByKey('id'));
-        }
-        else {
-            $entity = $this->dic->getGbRepository()->getObjectById($this->event->getParameterByKey('id'));
-        }
-        $formView = new \lwMembersearch\Domain\GB\View\Form('edit', $entity);
-        $formView->setErrors($this->event->getParameterByKey('error'));
-        return $this->returnRenderedView($formView);
-    }    
-    
-    public function save()
-    {
-        try {
-            $dataValueObject = new \LWddd\ValueObject($this->event->getDataByKey('postArray'));
-            $result = $this->dic->getGbRepository()->saveObject($this->event->getParameterByKey('id'), $dataValueObject);
-            $this->event->getResponse()->setParameterByKey('cmd', 'showGbList');
-            $this->event->getResponse()->setParameterByKey('response', 1);
-            return $this->event->getResponse();
-        }
-        catch (\LWddd\validationErrorsException $e) {
-            $this->event->setParameterByKey('error', $e->getErrors());
-            return $this->getEditFormView();
-        }        
-    }    
-    
-    public function getAddFormView()
-    {
-        $dataValueObject = new \LWddd\ValueObject($this->event->getDataByKey('postArray'));
-        $entity = \lwMembersearch\Domain\GB\Model\Factory::getInstance()->buildNewObjectFromValueObject($dataValueObject);
-        $formView = new \lwMembersearch\Domain\GB\View\Form('add', $entity);
-        $formView->setErrors($this->event->getParameterByKey('error'));
-        return $this->returnRenderedView($formView);
-    }
-    
-    public function add()
-    {
-        try {
-            $dataValueObject = new \LWddd\ValueObject($this->event->getDataByKey('postArray'));
-            $result = $this->dic->getGbRepository()->saveObject(false, $dataValueObject);
-            $this->event->getResponse()->setParameterByKey('cmd', 'showGbList');
-            $this->event->getResponse()->setParameterByKey('response', 1);
-            return  $this->event->getResponse();
-        }
-        catch (\LWddd\validationErrorsException $e) {
-            $this->event->setParameterByKey('error', $e->getErrors());
-            return $this->getAddFormView();
-        }
     }    
 }

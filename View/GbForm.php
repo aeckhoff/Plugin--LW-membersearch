@@ -1,14 +1,18 @@
 <?php
 
-namespace lwMembersearch\Domain\GB\View;
+namespace lwMembersearch\View;
 
-class Form
+class GbForm
 {
-    public function __construct($type, $entity)
+    public function __construct($type)
+    {
+        $this->view = new \lw_view(dirname(__FILE__).'/templates/GbForm.tpl.phtml');
+        $this->view->type = $type;
+    }
+    
+    public function setEntity($entity)
     {
         $this->gb = $entity;
-        $this->view = new \lw_view(dirname(__FILE__).'/templates/form.tpl.phtml');
-        $this->view->type = $type;
     }
     
     public function setErrors($errors=false)
